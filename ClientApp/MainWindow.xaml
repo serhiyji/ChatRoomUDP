@@ -1,0 +1,98 @@
+﻿<Window x:Class="ClientApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientApp"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:ViewModel}"
+        Title="MainWindow" Height="480" Width="850">
+    <DockPanel LastChildFill="True">
+        <!--верх-->
+
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <TextBlock DockPanel.Dock="Left" Margin="5" Padding="10,5" VerticalAlignment="Center">Nick :</TextBlock>
+            <Button Command="{Binding connectedCmd}" 
+                            Margin="5" Padding="10,5" DockPanel.Dock="Right">Connected</Button>
+            <Button Command="{Binding Path=disconnectedCmd}" 
+                            Margin="5" Padding="10,5" DockPanel.Dock="Right">Disconnected</Button>
+            <TextBox Margin="5" VerticalContentAlignment="Center"
+                            Text="{Binding Path=Nick, UpdateSourceTrigger=PropertyChanged}"
+                            IsReadOnly="{Binding Path=IsConnected, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        </DockPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <!--General-->
+            <DockPanel LastChildFill="True" Grid.Column="0">
+                <DockPanel DockPanel.Dock="Bottom">
+                    <Button Command="{Binding Path=sendPublicMessageCmd}" Margin="5" Padding="10,5" 
+                            DockPanel.Dock="Right">Send</Button>
+                    <TextBox Text="{Binding Path=MessagePublic, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="5" VerticalContentAlignment="Center"></TextBox>
+                </DockPanel>
+                <TextBlock DockPanel.Dock="Top" TextAlignment="Center" Margin="5">General Chat</TextBlock>
+                <ListBox 
+                    ItemsSource="{Binding Path=MessagesPublic, UpdateSourceTrigger=PropertyChanged}"
+                    Margin="5" ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel HorizontalAlignment="Stretch" LastChildFill="True">
+                                <TextBlock Margin="10, 0" DockPanel.Dock="Left" Text="{Binding Path=FromNick}"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding Path=_TimeSend}"></TextBlock>
+                                <TextBlock Text="{Binding Path=_Message}"></TextBlock>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <!--privatemessage-->
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Grid.Column="1">
+                <TextBlock DockPanel.Dock="Top" TextAlignment="Center" Margin="5">
+                    Private Chat <Run Text="{Binding Path=SelectedItemUser.Name, UpdateSourceTrigger=PropertyChanged}"></Run>
+                </TextBlock>
+                <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+                    <Button Command="{Binding Path=sendPrivateMessageCmd}" Margin="5" Padding="10, 5"
+                        DockPanel.Dock="Right">Send</Button>
+                    <TextBox Text="{Binding Path=MessagePrivate, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="5" VerticalContentAlignment="Center"></TextBox>
+                </DockPanel>
+                <ListBox Margin="5" ItemsSource="{Binding Path=SelectedItemUser.messages, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel HorizontalAlignment="Stretch" LastChildFill="True">
+                                <TextBlock Margin="10, 0" DockPanel.Dock="Left" Text="{Binding Path=FromNick}"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding Path=_TimeSend}"></TextBlock>
+                                <TextBlock Text="{Binding Path=_Message}"></TextBlock>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <DockPanel LastChildFill="True" Grid.Column="2">
+                <TextBlock DockPanel.Dock="Top" Text="Users" Margin="5" TextAlignment="Center"></TextBlock>
+                <ListBox Margin="5"
+                    ItemsSource="{Binding Path=Users, UpdateSourceTrigger=PropertyChanged}" 
+                    SelectedItem="{Binding Path=SelectedItemUser, UpdateSourceTrigger=PropertyChanged}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="False" HorizontalAlignment="Stretch">
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding Path=CountNewMessages, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+        </Grid>
+
+    </DockPanel>
+</Window>
